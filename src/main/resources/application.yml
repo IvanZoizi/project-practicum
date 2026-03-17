@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    password: password
+  h2:
+    console:
+      enabled: 'true'
+  application:
+    name: demo
+
+
+app:
+  cred:
+    token: "74a6f11787db9dad4dc0dda1e1696781"
