@@ -19,42 +19,42 @@ public class SettingController {
 
     private SettingService settingService;
 
-    @GetMapping("/get/temperature/{id}")
+    @GetMapping("/api/v1/temperature/{id}")
     public TemperatureDto getTemperature(@PathVariable long id) {
         return settingService.getTemperature(id);
     }
 
-    @PostMapping("/new/temperature/")
+    @PostMapping("/api/v1/temperature/")
     public TemperatureDto newTemperature(@RequestParam int temperature) {
         return settingService.newTemperature(temperature);
     }
 
-    @DeleteMapping("/delete/temperature/{id}")
+    @DeleteMapping("/api/v1/temperature/{id}")
     public void deleteTemperature(@PathVariable long id) {
         settingService.deleteTemperature(id);
     }
 
-    @GetMapping("/get/status/window/{id}")
+    @GetMapping("/api/v1/status/window/{id}")
     public StatusWindowBlindDto getStatus(@PathVariable long id) {
         return settingService.getStatusWindowBlind(id);
     }
 
-    @PostMapping("/new/status/window")
+    @PostMapping("/api/v1/status/window")
     public StatusWindowBlindDto newStatus(@RequestParam StatusWindowBlindEnum status) {
         return settingService.newStatusWindowBlind(status);
     }
 
-    @DeleteMapping("/delete/status/window/{id}")
+    @DeleteMapping("/api/v1/status/window/{id}")
     public void deleteStatus(@PathVariable long id) {
         settingService.deleteStatus(id);
     }
 
-    @GetMapping("/get/action/{id}")
+    @GetMapping("/api/v1/action/{id}")
     public ActionCurtainsDto getAction(@PathVariable long id) {
         return settingService.getTimeActionCurtains(id);
     }
 
-    @PostMapping("/new/action")
+    @PostMapping("/api/v1/action")
     public ActionCurtainsDto newAction(@RequestParam String time, @RequestParam ActionCurtainsEnum actionCurtainsEnum) {
         try {
             LocalTime localTime = LocalTime.parse(time);
@@ -64,7 +64,7 @@ public class SettingController {
         }
     }
 
-    @DeleteMapping("/delete/action/{id}")
+    @DeleteMapping("/api/v1/action/{id}")
     public void deleteAction(@PathVariable long id) {
         settingService.deleteTimeActionCurtains(id);
     }

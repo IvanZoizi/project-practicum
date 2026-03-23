@@ -1,5 +1,6 @@
 package ru.tbank.practicum.repository;
 
+import lombok.RequiredArgsConstructor;
 import ru.tbank.practicum.controller.dto.ActionCurtainsDto;
 import ru.tbank.practicum.database.Database;
 import ru.tbank.practicum.entity.ActionCurtainsEntity;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalTime;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SettingRepository {
-    private Database database;
+    private final Database database;
 
     private final DataAccessStrategy dataAccessStrategy;
 

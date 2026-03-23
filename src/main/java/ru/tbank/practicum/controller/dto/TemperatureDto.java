@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class TemperatureDto {
-    public Long id;
-    public Integer temperature;
+    private Long id;
+    private Integer temperature;
 }

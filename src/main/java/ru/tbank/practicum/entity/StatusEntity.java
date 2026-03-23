@@ -6,11 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StatusEntity implements Entity{
-    public long id;
-    public StatusWindowBlindEnum status;
-
-    public long getId() {
-        return id;
-    }
+public class StatusEntity{
+    private Long id;
+    private StatusWindowBlindEnum status;
 }

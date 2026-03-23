@@ -18,16 +18,4 @@ public class AppConfig {
                 .baseUrl("https://api.openweathermap.org")
                 .build();
     }
-
-    @Bean
-    public SettingService settingService(SettingMapper settingMapper,
-                                         SettingRepository settingRepository) {
-        return new SettingServiceImpl(settingMapper, settingRepository);
-    }
-
-    @Bean
-    public WeatherService weatherService(WebClient webClient,
-                                         SettingMapper settingMapper) {
-        return new WeatherServiceImpl(webClient, settingMapper);
-    }
 }

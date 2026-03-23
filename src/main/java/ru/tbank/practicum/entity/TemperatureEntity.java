@@ -5,11 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TemperatureEntity implements Entity{
-    public long id;
-    public int temperature;
-
-    public long getId() {
-        return id;
-    }
+public class TemperatureEntity{
+    private long id;
+    private int temperature;
 }

@@ -1,4 +1,4 @@
-package com.example.service.dto;
+package ru.tbank.practicum.service.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TemperatureForLight  {
-    public int temperature;
+    private int temperature;
 }

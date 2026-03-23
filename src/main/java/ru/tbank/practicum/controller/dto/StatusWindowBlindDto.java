@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StatusWindowBlindDto {
-    public Long id;
-    public StatusWindowBlindEnum status;
+    private Long id;
+    private StatusWindowBlindEnum status;
 }

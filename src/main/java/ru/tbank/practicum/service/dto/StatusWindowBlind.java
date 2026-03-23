@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatusWindowBlind {
-    public StatusWindowBlindEnum statusWindowBlindEnum;
+    private StatusWindowBlindEnum statusWindowBlindEnum;
 }

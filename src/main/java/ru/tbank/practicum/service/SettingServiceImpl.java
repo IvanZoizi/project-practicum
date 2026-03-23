@@ -18,21 +18,21 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalTime;
 
 @RequiredArgsConstructor
+@Service
 public class SettingServiceImpl implements SettingService {
-
     private final SettingMapper settingMapper;
     private final SettingRepository settingRepository;
 
     @Override
     public TemperatureDto getTemperature(long id) {
-        return settingMapper.getDtoFromEntityTemperature(
+        return settingMapper.getDto(
                 settingRepository.getTemperatureEntity(id)
         );
     }
 
     @Override
     public TemperatureDto newTemperature(int temperature) {
-        return settingMapper.getDtoFromEntityTemperature(
+        return settingMapper.getDto(
                 settingRepository.newTemperature(temperature)
         );
     }
@@ -44,14 +44,14 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public StatusWindowBlindDto getStatusWindowBlind(long id) {
-        return settingMapper.getDtoFromEntityStatus(
+        return settingMapper.getDto(
                 settingRepository.getStatus(id)
         );
     }
 
     @Override
     public StatusWindowBlindDto newStatusWindowBlind(StatusWindowBlindEnum status) {
-        return settingMapper.getDtoFromEntityStatus(
+        return settingMapper.getDto(
                 settingRepository.newStatus(status)
         );
     }
@@ -63,7 +63,7 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public ActionCurtainsDto getTimeActionCurtains(long id) {
-        return settingMapper.getDtoFromEntityAction(
+        return settingMapper.getDto(
                 settingRepository.getAction(
                         id
                 )
@@ -72,7 +72,7 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public ActionCurtainsDto newTimeActionCurtains(LocalTime time, ActionCurtainsEnum actionCurtainsEnum) {
-        return settingMapper.getDtoFromEntityAction(
+        return settingMapper.getDto(
                 settingRepository.newAction(
                         time,
                         actionCurtainsEnum

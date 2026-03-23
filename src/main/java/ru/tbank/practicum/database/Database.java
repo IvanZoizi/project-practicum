@@ -1,7 +1,6 @@
 package ru.tbank.practicum.database;
 
 import ru.tbank.practicum.entity.ActionCurtainsEntity;
-import ru.tbank.practicum.entity.Entity;
 import ru.tbank.practicum.entity.StatusEntity;
 import ru.tbank.practicum.entity.TemperatureEntity;
 import ru.tbank.practicum.service.enums.ActionCurtainsEnum;
@@ -19,7 +18,7 @@ public class Database {
     private List<StatusEntity> statusEntityList = new ArrayList<>();
     private List<ActionCurtainsEntity> actionCurtainsEntities = new ArrayList<>();
 
-    public long generateLongUID() {
+    public Long generateLongUID() {
         UUID uuid = UUID.randomUUID();
         return -uuid.getLeastSignificantBits() / 10000000;
     }
