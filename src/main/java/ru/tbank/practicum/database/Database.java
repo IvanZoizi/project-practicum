@@ -25,7 +25,7 @@ public class Database {
 
     public TemperatureEntity getTemperature(long id) {
         for (TemperatureEntity temperatureEntity : temperatureEntityList) {
-            if (temperatureEntity.id == id) {
+            if (temperatureEntity.getId() == id) {
                 return temperatureEntity;
             }
         }
@@ -34,7 +34,7 @@ public class Database {
 
     public void deleteTemperature(long id) {
         for (TemperatureEntity temperatureEntity : temperatureEntityList) {
-            if (temperatureEntity.id == id) {
+            if (temperatureEntity.getId() == id) {
                 temperatureEntityList.remove(
                         temperatureEntity
                 );
@@ -54,7 +54,7 @@ public class Database {
 
     public StatusEntity getStatus(long id) {
         for (StatusEntity statusEntity : statusEntityList) {
-            if (statusEntity.id == id) {
+            if (statusEntity.getId() == id) {
                 return statusEntity;
             }
         }
@@ -63,7 +63,7 @@ public class Database {
 
     public void deleteStatus(long id) {
         for (StatusEntity statusEntity : statusEntityList) {
-            if (statusEntity.id == id) {
+            if (statusEntity.getId() == id) {
                 statusEntityList.remove(
                         statusEntity
                 );
@@ -83,7 +83,7 @@ public class Database {
 
     public ActionCurtainsEntity getAction(long id) {
         for (ActionCurtainsEntity actionCurtainsEntity : actionCurtainsEntities) {
-            if (actionCurtainsEntity.id == id) {
+            if (actionCurtainsEntity.getId() == id) {
                 return actionCurtainsEntity;
             }
         }
@@ -92,7 +92,7 @@ public class Database {
 
     public void deleteAction(long id) {
         for (ActionCurtainsEntity actionCurtainsEntity : actionCurtainsEntities) {
-            if (actionCurtainsEntity.id == id) {
+            if (actionCurtainsEntity.getId() == id) {
                 actionCurtainsEntities.remove(
                         actionCurtainsEntity
                 );

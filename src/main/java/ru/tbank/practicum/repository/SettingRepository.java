@@ -19,8 +19,6 @@ import java.time.LocalTime;
 public class SettingRepository {
     private final Database database;
 
-    private final DataAccessStrategy dataAccessStrategy;
-
     public TemperatureEntity getTemperatureEntity(long id) {
         return database.getTemperature(id);
     }
