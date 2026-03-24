@@ -13,4 +13,4 @@ spring:
 
 app:
   cred:
-    token: "74a6f11787db9dad4dc0dda1e1696781"
+    token: "demo token"

@@ -1,5 +1,6 @@
 package ru.tbank.practicum.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +9,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonData {
+    @JsonProperty("temp")
     private double temp;
-    private double feels_like;
-    private double temp_min;
-    private double temp_max;
+
+    @JsonProperty("feels_like")
+    private double feelsLike;
+
+    @JsonProperty("temp_min")
+    private double tempMin;
+
+    @JsonProperty("temp_max")
+    private double tempMax;
+
+    @JsonProperty("pressure")
     private int pressure;
+
+    @JsonProperty("humidity")
     private int humidity;
+
+    @JsonProperty("sea_level")
     private int sea_level;
-    private int grnd_level;
+
+    @JsonProperty("grnd_level")
+    private int grndLevel;
 }
