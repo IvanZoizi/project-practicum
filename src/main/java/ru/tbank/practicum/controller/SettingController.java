@@ -1,8 +1,8 @@
 package ru.tbank.practicum.controller;
 
-import ru.tbank.practicum.controller.dto.ActionCurtainsDto;
-import ru.tbank.practicum.controller.dto.StatusWindowBlindDto;
-import ru.tbank.practicum.controller.dto.TemperatureDto;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.beans.factory.annotation.Qualifier;
+import ru.tbank.practicum.controller.dto.*;
 import ru.tbank.practicum.service.SettingService;
 import ru.tbank.practicum.service.enums.ActionCurtainsEnum;
 import ru.tbank.practicum.service.enums.StatusWindowBlindEnum;
@@ -23,50 +23,32 @@ public class SettingController {
     public TemperatureDto getTemperature(@PathVariable long id) {
         return settingService.getTemperature(id);
     }
+//
+    @PutMapping("/api/v1/temperature/")
+    public BatteryTempDto updateTemperature(@RequestBody TempBody tempBody) {
+        System.out.println(tempBody);
 
-    @PostMapping("/api/v1/temperature/")
-    public TemperatureDto newTemperature(@RequestParam int temperature) {
-        return settingService.newTemperature(temperature);
+        if (tempBody.getId() == null) {
+            throw new IllegalArgumentException("ID must not be null");
+        }
+
+        return settingService.updateTemp(tempBody.getId(), tempBody.getTemp(), tempBody.getSetTemp());
     }
-
-    @DeleteMapping("/api/v1/temperature/{id}")
-    public void deleteTemperature(@PathVariable long id) {
-        settingService.deleteTemperature(id);
-    }
-
     @GetMapping("/api/v1/status/window/{id}")
     public StatusWindowBlindDto getStatus(@PathVariable long id) {
         return settingService.getStatusWindowBlind(id);
     }
 
-    @PostMapping("/api/v1/status/window")
-    public StatusWindowBlindDto newStatus(@RequestParam StatusWindowBlindEnum status) {
-        return settingService.newStatusWindowBlind(status);
-    }
+    @PutMapping("/api/v1/status/window/")
+    public WindowActionDto updateStatusWindow(@RequestBody WindowBody windowBody) {
 
-    @DeleteMapping("/api/v1/status/window/{id}")
-    public void deleteStatus(@PathVariable long id) {
-        settingService.deleteStatus(id);
-    }
-
-    @GetMapping("/api/v1/action/{id}")
-    public ActionCurtainsDto getAction(@PathVariable long id) {
-        return settingService.getTimeActionCurtains(id);
-    }
-
-    @PostMapping("/api/v1/action")
-    public ActionCurtainsDto newAction(@RequestParam String time, @RequestParam ActionCurtainsEnum actionCurtainsEnum) {
-        try {
-            LocalTime localTime = LocalTime.parse(time);
-            return settingService.newTimeActionCurtains(localTime, actionCurtainsEnum);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Неверный формат времени. Ожидается формат HH:mm (например, 14:30)");
+        if (windowBody.getId() == null) {
+            throw new IllegalArgumentException("ID must not be null");
         }
+
+        return settingService.updateWindow(windowBody.getId(), windowBody.getTimeStart(), windowBody.getTimeEnd(), windowBody.getStatus());
     }
 
-    @DeleteMapping("/api/v1/action/{id}")
-    public void deleteAction(@PathVariable long id) {
-        settingService.deleteTimeActionCurtains(id);
-    }
+
 
 }

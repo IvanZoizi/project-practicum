@@ -1,89 +1,59 @@
 package ru.tbank.practicum.service;
 
-import ru.tbank.practicum.controller.dto.ActionCurtainsDto;
+import org.springframework.cglib.core.Local;
+import ru.tbank.practicum.controller.dto.BatteryTempDto;
 import ru.tbank.practicum.controller.dto.StatusWindowBlindDto;
 import ru.tbank.practicum.controller.dto.TemperatureDto;
-import ru.tbank.practicum.controller.dto.WeatherDto;
+import ru.tbank.practicum.controller.dto.WindowActionDto;
+import ru.tbank.practicum.entity.ActionStatus;
 import ru.tbank.practicum.mapper.SettingMapper;
-import ru.tbank.practicum.repository.SettingRepository;
-import ru.tbank.practicum.service.dto.WeatherResponse;
-import ru.tbank.practicum.service.enums.ActionCurtainsEnum;
-import ru.tbank.practicum.service.enums.StatusWindowBlindEnum;
+import ru.tbank.practicum.repository.BatterySettingsRepository;
+import ru.tbank.practicum.repository.BatteryTempRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import ru.tbank.practicum.repository.WindowBlindActionRepository;
+import ru.tbank.practicum.repository.WindowBlindSettingsRepository;
 
-import java.time.LocalTime;
+import java.awt.*;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
 public class SettingServiceImpl implements SettingService {
     private final SettingMapper settingMapper;
-    private final SettingRepository settingRepository;
+    private final BatterySettingsRepository batterySettingsRepository;
+    private final BatteryTempRepository batteryTempRepository;
+    private final WindowBlindSettingsRepository windowBlindSettings;
+    private final WindowBlindActionRepository windowBlindActionRepository;
 
     @Override
-    public TemperatureDto getTemperature(long id) {
-        return settingMapper.getDto(
-                settingRepository.getTemperatureEntity(id)
+    public TemperatureDto getTemperature(Long id) {
+        return settingMapper.getDtoBatterySettings(
+                batterySettingsRepository.findById(id)
         );
     }
 
     @Override
-    public TemperatureDto newTemperature(int temperature) {
-        return settingMapper.getDto(
-                settingRepository.newTemperature(temperature)
+    public BatteryTempDto updateTemp(Long id, Long temp, Long setTemp) {
+        System.out.println(id);
+        System.out.println(temp);
+        System.out.println(setTemp);
+        batteryTempRepository.updateTempById(id, temp, setTemp);
+        return settingMapper.getDtoBatteryTemp(
+                batteryTempRepository.findById(id)
         );
     }
 
-    @Override
-    public void deleteTemperature(long id) {
-        settingRepository.deleteTemperature(id);
-    }
-
-    @Override
-    public StatusWindowBlindDto getStatusWindowBlind(long id) {
-        return settingMapper.getDto(
-                settingRepository.getStatus(id)
+    public StatusWindowBlindDto getStatusWindowBlind(Long id) {
+        return settingMapper.getDtoWindowStatus(
+                windowBlindSettings.findById(id)
         );
     }
 
-    @Override
-    public StatusWindowBlindDto newStatusWindowBlind(StatusWindowBlindEnum status) {
-        return settingMapper.getDto(
-                settingRepository.newStatus(status)
+    public WindowActionDto updateWindow(Long id, LocalDateTime timeStart, LocalDateTime timeEnd, ActionStatus status) {
+        windowBlindActionRepository.updateWindowById(id, timeStart, timeEnd, status);
+        return settingMapper.getDtoWindowAction(
+                windowBlindActionRepository.findById(id)
         );
     }
-
-    @Override
-    public void deleteStatus(long id) {
-        settingRepository.deleteStatus(id);
-    }
-
-    @Override
-    public ActionCurtainsDto getTimeActionCurtains(long id) {
-        return settingMapper.getDto(
-                settingRepository.getAction(
-                        id
-                )
-        );
-    }
-
-    @Override
-    public ActionCurtainsDto newTimeActionCurtains(LocalTime time, ActionCurtainsEnum actionCurtainsEnum) {
-        return settingMapper.getDto(
-                settingRepository.newAction(
-                        time,
-                        actionCurtainsEnum
-                )
-        );
-    }
-
-    @Override
-    public void deleteTimeActionCurtains(long id) {
-        settingRepository.deleteAction(id);
-    }
-
-
 }

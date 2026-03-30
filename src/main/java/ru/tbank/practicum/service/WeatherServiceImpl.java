@@ -3,7 +3,6 @@ package ru.tbank.practicum.service;
 import org.springframework.stereotype.Service;
 import ru.tbank.practicum.controller.dto.WeatherDto;
 import ru.tbank.practicum.mapper.SettingMapper;
-import ru.tbank.practicum.repository.SettingRepository;
 import ru.tbank.practicum.service.dto.WeatherResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
