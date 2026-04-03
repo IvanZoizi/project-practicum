@@ -1,5 +1,7 @@
 package ru.tbank.practicum.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.cglib.core.Local;
 import ru.tbank.practicum.controller.dto.BatteryTempDto;
 import ru.tbank.practicum.controller.dto.StatusWindowBlindDto;
@@ -17,6 +19,7 @@ import ru.tbank.practicum.repository.WindowBlindSettingsRepository;
 import java.awt.*;
 import java.time.LocalDateTime;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class SettingServiceImpl implements SettingService {
@@ -28,6 +31,10 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public TemperatureDto getTemperature(Long id) {
+
+        MDC.put("id", String.valueOf(id));
+        log.info("Get Temperature");
+
         return settingMapper.getDtoBatterySettings(
                 batterySettingsRepository.findById(id)
         );
@@ -35,9 +42,11 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public BatteryTempDto updateTemp(Long id, Long temp, Long setTemp) {
-        System.out.println(id);
-        System.out.println(temp);
-        System.out.println(setTemp);
+        MDC.put("id", String.valueOf(id));
+        MDC.put("temp", String.valueOf(temp));
+        MDC.put("setTemp", String.valueOf(setTemp));
+
+        log.info("Update Temp");
         batteryTempRepository.updateTempById(id, temp, setTemp);
         return settingMapper.getDtoBatteryTemp(
                 batteryTempRepository.findById(id)
@@ -45,12 +54,19 @@ public class SettingServiceImpl implements SettingService {
     }
 
     public StatusWindowBlindDto getStatusWindowBlind(Long id) {
+        MDC.put("id", String.valueOf(id));
+        log.info("Get status window blind");
         return settingMapper.getDtoWindowStatus(
                 windowBlindSettings.findById(id)
         );
     }
 
     public WindowActionDto updateWindow(Long id, LocalDateTime timeStart, LocalDateTime timeEnd, ActionStatus status) {
+        MDC.put("id", String.valueOf(id));
+        MDC.put("timeStart", String.valueOf(timeStart));
+        MDC.put("timeEnd", String.valueOf(timeEnd));
+        MDC.put("status", String.valueOf(status));
+        log.info("updateWindow");
         windowBlindActionRepository.updateWindowById(id, timeStart, timeEnd, status);
         return settingMapper.getDtoWindowAction(
                 windowBlindActionRepository.findById(id)

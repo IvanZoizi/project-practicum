@@ -13,15 +13,7 @@ public interface SettingService {
 
     TemperatureDto getTemperature(Long id);
     BatteryTempDto updateTemp(Long id, Long temp, Long setTemp);
-//    TemperatureDto newTemperature(int temperature);
-//    void deleteTemperature(long id);
-//
+
     StatusWindowBlindDto getStatusWindowBlind(Long id);
     WindowActionDto updateWindow(Long id, LocalDateTime timeStart, LocalDateTime timeEnd, ActionStatus status);
-//    StatusWindowBlindDto newStatusWindowBlind(StatusWindowBlindEnum status);
-//    void deleteStatus(long id);
-//
-//    ActionCurtainsDto getTimeActionCurtains(long id);
-//    ActionCurtainsDto newTimeActionCurtains(LocalTime time, ActionCurtainsEnum actionCurtainsEnum);
-//    void deleteTimeActionCurtains(long id);
 }

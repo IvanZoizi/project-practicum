@@ -1,6 +1,8 @@
 package ru.tbank.practicum.job;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import ru.tbank.practicum.controller.dto.WeatherDto;
 import ru.tbank.practicum.entity.AmbientTemp;
 import ru.tbank.practicum.repository.AmbientTempRepository;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduledTasks {
 
     private final double lon = 51.507545;
@@ -24,7 +27,10 @@ public class ScheduledTasks {
     @Scheduled(fixedDelay = 5000)
     public void reportCurrentTime() {
         WeatherDto weatherResponse = weatherService.getWeatherData(lon, lat);
-        System.out.println(weatherResponse);
+
+        MDC.put("weatherResponse", String.valueOf(weatherResponse));
+        log.info("Get new weather");
+
         AmbientTemp ambientTemp = new AmbientTemp();
         ambientTemp.setTemp(weatherResponse.getTemperature());
         ambientTemp.setTimeStart(LocalDateTime.now());

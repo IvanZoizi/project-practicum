@@ -11,3 +11,18 @@ spring:
     show-sql: true
   application:
     name: demo
+
+app:
+  cred:
+    token: "demo token"
+
+server:
+  port:
+    9090
+
+logging:
+  level:
+    ru.tbank.practicum.service: DEBUG
+    ru.tbank.practicum: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%mdc] %msg%n"
