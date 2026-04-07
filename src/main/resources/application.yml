@@ -1,16 +1,28 @@
 spring:
-#  datasource:
-#    username: sa
-#    url: jdbc:h2:mem:testdb
-#    driverClassName: org.h2.Driver
-#    password: password
-#  h2:
-#    console:
-#      enabled: 'true'
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dbPracticum
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
   application:
     name: demo
-
 
 app:
   cred:
     token: "demo token"
+
+server:
+  port:
+    9090
+
+logging:
+  level:
+    ru.tbank.practicum.service: DEBUG
+    ru.tbank.practicum: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%mdc] %msg%n"

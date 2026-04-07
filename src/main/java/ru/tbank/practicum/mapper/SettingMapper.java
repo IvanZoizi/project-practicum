@@ -1,12 +1,7 @@
 package ru.tbank.practicum.mapper;
 
-import ru.tbank.practicum.controller.dto.ActionCurtainsDto;
-import ru.tbank.practicum.controller.dto.StatusWindowBlindDto;
-import ru.tbank.practicum.controller.dto.TemperatureDto;
-import ru.tbank.practicum.controller.dto.WeatherDto;
-import ru.tbank.practicum.entity.ActionCurtainsEntity;
-import ru.tbank.practicum.entity.StatusEntity;
-import ru.tbank.practicum.entity.TemperatureEntity;
+import ru.tbank.practicum.controller.dto.*;
+import ru.tbank.practicum.entity.*;
 import ru.tbank.practicum.service.dto.CommonData;
 import ru.tbank.practicum.service.dto.Weather;
 import ru.tbank.practicum.service.dto.WeatherResponse;
@@ -35,25 +30,98 @@ public class SettingMapper {
         return new WeatherDto(null, temperature, weatherMain);
     }
 
-    public TemperatureDto getDto(TemperatureEntity temperatureEntity) {
+    public CreateUserDto getDto(Users users, Devices devices, WindowBlindSettings windowBlindSettings,
+                          BatterySettings batterySettings, WindowBlindAction openAction,
+                          WindowBlindAction closeAction, BatteryTemp minTemp, BatteryTemp maxTemp) {
+        return new CreateUserDto(
+                users.getId(),
+                devices.getId(),
+                windowBlindSettings.getId(),
+                batterySettings.getId(),
+                openAction.getId(),
+                closeAction.getId(),
+                minTemp.getId(),
+                maxTemp.getId()
+        );
+    }
+
+    public UserDto getDto(Users users) {
+        return new UserDto(
+                users.getId(),
+                users.getLogin()
+        );
+    }
+
+    public DevicesDto getDto(Devices devices) {
+        return new DevicesDto(devices.getId(),
+                devices.getUser(),
+                devices.getBattery(),
+                devices.getWindowBlind());
+    }
+
+    public TemperatureDto getDtoBatterySettings(Optional<BatterySettings> batterySettings) {
+        if (batterySettings.isEmpty()) {
+            return new TemperatureDto(
+                    null,
+                    null,
+                    null
+            );
+        }
         return new TemperatureDto(
-                temperatureEntity.getId(),
-                temperatureEntity.getTemperature()
+                batterySettings.get().getId(),
+                batterySettings.get().getMinTemp(),
+                batterySettings.get().getMaxTemp()
         );
     }
 
-    public StatusWindowBlindDto getDto(StatusEntity statusEntity) {
+    public BatteryTempDto getDtoBatteryTemp(Optional<BatteryTemp> batteryTemp) {
+        if (batteryTemp.isEmpty()) {
+            return new BatteryTempDto(
+                    null,
+                    null,
+                    null
+            );
+        }
+
+        return new BatteryTempDto(
+                batteryTemp.get().getId(),
+                batteryTemp.get().getTemp(),
+                batteryTemp.get().getSetTemp()
+        );
+    }
+
+    public StatusWindowBlindDto getDtoWindowStatus(Optional<WindowBlindSettings> windowBlindSettings) {
+        if (windowBlindSettings.isEmpty()) {
+            return new StatusWindowBlindDto(
+                    null,
+                    null,
+                    null
+            );
+        }
+
         return new StatusWindowBlindDto(
-                statusEntity.getId(),
-                statusEntity.getStatus()
+                windowBlindSettings.get().getId(),
+                windowBlindSettings.get().getOpenAction(),
+                windowBlindSettings.get().getCloseAction()
         );
     }
 
-    public ActionCurtainsDto getDto(ActionCurtainsEntity actionCurtainsEntity) {
-        return new ActionCurtainsDto(
-                actionCurtainsEntity.getId(),
-                actionCurtainsEntity.getTime(),
-                actionCurtainsEntity.getStatus()
+    public WindowActionDto getDtoWindowAction(Optional<WindowBlindAction> windowBlindAction) {
+        if (windowBlindAction.isEmpty()) {
+            return new WindowActionDto(
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
+
+        return new WindowActionDto(
+                windowBlindAction.get().getId(),
+                windowBlindAction.get().getTimeStart(),
+                windowBlindAction.get().getTimeEnd(),
+                windowBlindAction.get().getStatus()
         );
     }
+
 }
