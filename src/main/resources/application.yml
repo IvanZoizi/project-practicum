@@ -18,7 +18,7 @@ app:
 
 server:
   port:
-    9090
+    8080
 
 logging:
   level:
