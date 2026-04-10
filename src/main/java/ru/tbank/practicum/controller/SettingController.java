@@ -38,10 +38,6 @@ public class SettingController {
         MDC.put("tempBody", String.valueOf(tempBody));
         log.info("Put /api/v1/temperature/");
 
-        if (tempBody.getId() == null) {
-            throw new IllegalArgumentException("ID must not be null");
-        }
-
         return settingService.updateTemp(tempBody.getId(), tempBody.getTemp(), tempBody.getSetTemp());
     }
     @GetMapping("/api/v1/status/window/{id}")

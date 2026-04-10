@@ -1,43 +1,22 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
+FROM amazoncorretto:21-alpine3.21 as builder
 
 WORKDIR /app
 
-ENV UV_COMPILE_BYTECODE=1
-ENV UV_LINK_MODE=copy
-ENV UV_TOOL_BIN_DIR=/usr/local/bin
+COPY . .
 
-# Копируем файлы зависимостей
-COPY pyproject.toml uv.lock ./
+RUN chmod +x gradlew
 
-# Синхронизируем зависимости
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-install-project --no-dev
+RUN sed -i 's/\r$//' gradlew
 
-# Копируем исходный код
-COPY ../BotAccountant .
 
-# Синхронизируем проект
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev
+RUN ./gradlew clean build -x test --no-daemon
 
-FROM python:3.12-slim-bookworm
+FROM amazoncorretto:21.0.7-alpine
 
 WORKDIR /app
 
-# Создаем не-root пользователя для безопасности
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+COPY --from=builder /app/build/libs/*.jar app.jar
 
-# Копируем виртуальное окружение и код из builder stage
-COPY --from=builder --chown=appuser:appuser /app /app
+EXPOSE 8080
 
-
-# Устанавливаем путь к Python окружению
-ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app"
-
-# Переключаемся на непривилегированного пользователя
-USER appuser
-
-# Запускаем приложение
-#CMD ["python", "/app/main.py"]
-
+ENTRYPOINT ["java", "-jar", "app.jar"]
