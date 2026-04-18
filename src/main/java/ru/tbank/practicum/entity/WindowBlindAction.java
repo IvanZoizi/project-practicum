@@ -1,6 +1,7 @@
 package ru.tbank.practicum.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "window_blind_action")
 @Entity
 public class WindowBlindAction {
@@ -26,5 +28,4 @@ public class WindowBlindAction {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
     private ActionStatus status;
-
 }
