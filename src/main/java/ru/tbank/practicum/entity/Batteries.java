@@ -3,12 +3,13 @@ package ru.tbank.practicum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.TypeAlias;
 
 @Data
-@NoArgsConstructor
-@Table(name = "devices")
 @Entity
-public class Devices {
+@Table(name = "batteries")
+@NoArgsConstructor
+public class Batteries {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -18,12 +19,10 @@ public class Devices {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private Users user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "battery_settings_id", referencedColumnName = "id")
-    private BatterySettings battery;
+    @Column(name = "room", nullable = false)
+    private String room;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "window_blind_settings_id", referencedColumnName = "id")
-    private WindowBlindSettings windowBlind;
+    @Column(name = "temp_now", nullable = false)
+    private Long timeNow;
 
 }

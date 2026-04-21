@@ -1,11 +1,9 @@
 package ru.tbank.practicum.controller.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class UserDto {
-    private Long id;
+public class RegisterDto {
     private String login;
+    private String password;
 }

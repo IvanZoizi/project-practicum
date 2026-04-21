@@ -7,17 +7,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "notifications")
-public class Notifications {
+@Table(name = "users_chats")
+public class UsersChats {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bot_user_id", referencedColumnName = "id")
-    private BotUser userBot;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Users user;
 
-    @Column(name="message", nullable = false)
-    private String message;
+    @Column(name = "chat_id", nullable = false)
+    private Long chatId;
+
 }

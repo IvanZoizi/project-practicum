@@ -1,87 +1,60 @@
 package ru.tbank.practicum.service;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import ru.tbank.practicum.controller.dto.CreateUserDto;
-import ru.tbank.practicum.controller.dto.DevicesDto;
-import ru.tbank.practicum.controller.dto.LoginRequest;
-import ru.tbank.practicum.controller.dto.UserDto;
-import ru.tbank.practicum.entity.*;
+import ru.tbank.practicum.controller.dto.RegisterDto;
+import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.mapper.SettingMapper;
-import ru.tbank.practicum.repository.*;
+import ru.tbank.practicum.repository.UsersRepository;
+import ru.tbank.practicum.security.CustomUserDetail;
+import ru.tbank.practicum.security.dto.JwtAutorizeToken;
+import ru.tbank.practicum.security.jwt.JwtService;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
+import javax.naming.AuthenticationException;
 
+@Slf4j
 @Service
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+@AllArgsConstructor
+public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final DeviceRepository deviceRepository;
-    private final WindowBlindSettingsRepository windowBlindSettingsRepository;
-    private final BatterySettingsRepository batterySettingsRepository;
-    private final WindowBlindActionRepository windowBlindActionRepository;
-    private final BatteryTempRepository batteryTempRepository;
+    private final UsersRepository usersRepository;
     private final SettingMapper settingMapper;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public CreateUserDto createUser(LoginRequest loginRequest) {
-        Users users = new Users();
-        users.setLogin(loginRequest.getLogin());
-        userRepository.save(users);
-
-        WindowBlindSettings windowBlindSettings = new WindowBlindSettings();
-        windowBlindSettingsRepository.save(windowBlindSettings);
-
-        WindowBlindAction openAction = new WindowBlindAction();
-        openAction.setTimeStart(LocalDateTime.now());
-        openAction.setStatus(ActionStatus.COMPLETED);
-        openAction.setTimeEnd(LocalDateTime.now());
-        windowBlindActionRepository.save(openAction);
-
-        WindowBlindAction closeAction = new WindowBlindAction();
-        closeAction.setTimeStart(LocalDateTime.now());
-        closeAction.setStatus(ActionStatus.COMPLETED);
-        closeAction.setTimeEnd(LocalDateTime.now());
-        windowBlindActionRepository.save(closeAction);
-
-        windowBlindSettings.setOpenAction(openAction);
-        windowBlindSettings.setCloseAction(closeAction);
-
-        BatterySettings batterySettings = new BatterySettings();
-        batterySettingsRepository.save(batterySettings);
-
-        BatteryTemp minTemp = new BatteryTemp();
-        minTemp.setTemp(-10L);
-        minTemp.setSetTemp(20L);
-        batteryTempRepository.save(minTemp);
-
-        BatteryTemp maxTemp = new BatteryTemp();
-        maxTemp.setTemp(20L);
-        maxTemp.setSetTemp(5L);
-        batteryTempRepository.save(maxTemp);
-
-        batterySettings.setMaxTemp(maxTemp);
-        batterySettings.setMinTemp(minTemp);
-
-        Devices devices = new Devices();
-        devices.setUser(users);
-        devices.setWindowBlind(windowBlindSettings);
-        devices.setBattery(batterySettings);
-        deviceRepository.save(devices);
-
-        return settingMapper.getDto(users, devices,
-                windowBlindSettings, batterySettings, openAction, closeAction, minTemp, maxTemp);
+    public String register(RegisterDto registerDto) {
+        Users user = new Users();
+        user.setLogin(registerDto.getLogin());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        usersRepository.save(user);
+        return "User add";
     }
 
     @Override
-    public UserDto getUser(Long id) {
-        return settingMapper.getDto(userRepository.findById(id).get());
+    public JwtAutorizeToken singIn(RegisterDto registerDto) throws AuthenticationException {
+        Users user = findByRegisterDto(registerDto);
+        log.info("User: " + user);
+        return jwtService.generateAuthToken(user.getLogin());
+
     }
 
-    @Override
-    public DevicesDto getDevices(Long id) {
-        return settingMapper.getDto(deviceRepository.findById(id).get());
+    private Users findByRegisterDto(RegisterDto registerDto) throws AuthenticationException {
+        Optional<Users> usersOptional = usersRepository.findByLogin(registerDto.getLogin());
+        log.info("UsersOptional: " + usersOptional);
+        if (usersOptional.isPresent()) {
+            Users user = usersOptional.get();
+            log.info("User: " + user);
+            if (passwordEncoder.matches(registerDto.getPassword(), user.getPassword())){
+                return user;
+            }
+        }
+        throw new AuthenticationException("Email or password is not correct");
     }
+
+
 }

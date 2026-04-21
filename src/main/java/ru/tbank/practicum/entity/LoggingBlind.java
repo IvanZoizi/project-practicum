@@ -7,18 +7,22 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@Table(name = "ambient_temp")
 @Entity
-public class AmbientTemp {
+@NoArgsConstructor
+@Table(name = "logging_blind")
+public class LoggingBlind {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "time", nullable = false)
-    private LocalDateTime timeStart;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "blind_id", referencedColumnName = "id")
+    private Blinds blinds;
 
-    @Column(name = "temp", nullable = false)
-    private Double temp;
+    @Column(name = "time", nullable = false)
+    private LocalDateTime time;
+
+    @Column(name = "new_status", nullable = false)
+    private String newStatus;
 }

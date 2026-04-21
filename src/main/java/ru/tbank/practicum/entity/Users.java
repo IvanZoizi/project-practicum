@@ -1,14 +1,16 @@
 package ru.tbank.practicum.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Data
+@Table(name="users")
+@NoArgsConstructor
 public class Users {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -17,7 +19,6 @@ public class Users {
     @Column(name = "login", nullable = false)
     private String login;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bot_user_id", referencedColumnName = "id")
-    private BotUser botUser;
+    @Column(name = "password", nullable = false)
+    private String password;
 }

@@ -5,42 +5,41 @@ import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tbank.practicum.controller.dto.*;
+import ru.tbank.practicum.controller.dto.RegisterDto;
+import ru.tbank.practicum.security.dto.JwtAutorizeToken;
 import ru.tbank.practicum.service.UserService;
 
+import javax.naming.AuthenticationException;
+
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/")
 @AllArgsConstructor
 @Slf4j
 public class UserController {
 
     private UserService userService;
 
-    @PostMapping("/")
-    public CreateUserDto postUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        MDC.put("loginRequsets", String.valueOf(loginRequest));
-        log.info("Create new user");
-
-        return userService.createUser(loginRequest);
+    @PostMapping("/register")
+    public String register(@RequestBody RegisterDto registerDto) {
+        return userService.register(registerDto);
     }
 
-    @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable Long id) {
-
-        MDC.put("id", String.valueOf(id));
-        log.info("Get user by id");
-
-        return userService.getUser(id);
+    @PostMapping("/login")
+    public ResponseEntity<JwtAutorizeToken> singIn(@RequestBody RegisterDto userCredentialsDto) {
+        try {
+            JwtAutorizeToken jwtAuthenticationDto = userService.singIn(userCredentialsDto);
+            return ResponseEntity.ok(jwtAuthenticationDto);
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
-    @GetMapping("/device/{id}")
-    public DevicesDto getDevice(@PathVariable Long id) {
-
-        MDC.put("id", String.valueOf(id));
-        log.info("Get user devices by id user");
-
-        return userService.getDevices(id);
+    @GetMapping("/welcome")
+    public String getVoid() {
+        return "Теперь ты зарегистрирован";
     }
+
 }
