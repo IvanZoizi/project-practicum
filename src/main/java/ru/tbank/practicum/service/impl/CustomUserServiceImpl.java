@@ -1,4 +1,4 @@
-package ru.tbank.practicum.service;
+package ru.tbank.practicum.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

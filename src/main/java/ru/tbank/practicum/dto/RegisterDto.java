@@ -1,4 +1,4 @@
-package ru.tbank.practicum.controller.dto;
+package ru.tbank.practicum.dto;
 
 import lombok.Data;
 

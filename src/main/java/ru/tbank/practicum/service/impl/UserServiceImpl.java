@@ -1,17 +1,20 @@
-package ru.tbank.practicum.service;
+package ru.tbank.practicum.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import ru.tbank.practicum.controller.dto.RegisterDto;
+import ru.tbank.practicum.dto.CoordsRequestDto;
+import ru.tbank.practicum.dto.CoordsResponseDto;
+import ru.tbank.practicum.dto.RegisterDto;
 import ru.tbank.practicum.entity.Users;
+import ru.tbank.practicum.entity.UsersCoords;
 import ru.tbank.practicum.mapper.SettingMapper;
+import ru.tbank.practicum.repository.UsersCoordsRepository;
 import ru.tbank.practicum.repository.UsersRepository;
-import ru.tbank.practicum.security.CustomUserDetail;
 import ru.tbank.practicum.security.dto.JwtAutorizeToken;
 import ru.tbank.practicum.security.jwt.JwtService;
+import ru.tbank.practicum.service.UserService;
 
 import java.util.Optional;
 import javax.naming.AuthenticationException;
@@ -22,6 +25,7 @@ import javax.naming.AuthenticationException;
 public class UserServiceImpl implements UserService {
 
     private final UsersRepository usersRepository;
+    private final UsersCoordsRepository usersCoordsRepository;
     private final SettingMapper settingMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -54,6 +58,48 @@ public class UserServiceImpl implements UserService {
             }
         }
         throw new AuthenticationException("Email or password is not correct");
+    }
+
+    public Users getUserByToken(String token) {
+        String login = jwtService.getLoginFromToken(token);
+        Optional<Users> user = usersRepository.findByLogin(login);
+
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return user.get();
+    }
+
+    @Override
+    public CoordsResponseDto newUserCoords(String jwtToken, CoordsRequestDto coordsRequestDto) {
+
+        Users user = getUserByToken(jwtToken);
+        Optional<UsersCoords> usersCoords = usersCoordsRepository.findByUserId_Id(user.getId());
+        if (usersCoords.isEmpty()) {
+            UsersCoords newUserCoords = new UsersCoords();
+            newUserCoords.setUserId(user);
+            newUserCoords.setLat(coordsRequestDto.getLat());
+            newUserCoords.setLon(coordsRequestDto.getLon());
+            return settingMapper.getDto(usersCoordsRepository.save(newUserCoords));
+        }
+
+        UsersCoords coords = usersCoords.get();
+        coords.setLon(coordsRequestDto.getLon());
+        coords.setLat(coordsRequestDto.getLat());
+        return settingMapper.getDto(coords);
+
+    }
+
+    @Override
+    public CoordsResponseDto getUserCoords(String jwtToken) {
+        Users user = getUserByToken(jwtToken);
+
+        Optional<UsersCoords> usersCoords = usersCoordsRepository.findByUserId_Id(user.getId());
+        if (usersCoords.isEmpty()) {
+            return settingMapper.getDto(new UsersCoords());
+        }
+
+        return settingMapper.getDto(usersCoords.get());
     }
 
 

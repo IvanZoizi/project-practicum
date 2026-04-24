@@ -3,6 +3,7 @@ package ru.tbank.practicum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.tbank.practicum.dto.enums.KeyStatus;
 
 @Data
 @Entity
@@ -22,5 +23,5 @@ public class Keys {
     private String room;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    private KeyStatus status;
 }

@@ -3,6 +3,7 @@ package ru.tbank.practicum.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("8074658237c236e39e96e909ac1abb25a3e1773b100096ad6877c439cd452c17")
@@ -98,5 +100,22 @@ public class JwtService {
         }
         return false;
     }
+
+    private String getTokenFromRequest(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String getJwtToken(String authHeader) {
+        String jwtToken = getTokenFromRequest(authHeader);
+
+        if (!validateJwtToken(jwtToken)) {
+            throw new IllegalArgumentException();
+        }
+        return jwtToken;
+    }
+
 
 }

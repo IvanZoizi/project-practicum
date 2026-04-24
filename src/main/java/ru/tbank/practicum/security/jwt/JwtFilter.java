@@ -12,8 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.tbank.practicum.security.CustomUserDetail;
-import ru.tbank.practicum.service.CustomUserServiceImpl;
-import ru.tbank.practicum.service.UserService;
+import ru.tbank.practicum.service.impl.CustomUserServiceImpl;
 
 import java.io.IOException;
 
