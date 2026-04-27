@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tbank.practicum.dto.KeyRequestDto;
 import ru.tbank.practicum.dto.KeyResponseDto;
-import ru.tbank.practicum.dto.enums.KeyStatus;
+import ru.tbank.practicum.dto.enums.Status;
 import ru.tbank.practicum.entity.Keys;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.mapper.SettingMapper;
@@ -69,7 +69,7 @@ public class KeyServiceImpl implements KeyService {
     }
 
     @Override
-    public KeyStatus getStatusKey(String token, Long id) {
+    public Status getStatusKey(String token, Long id) {
 
         KeyResponseDto keyResponseDto = getKey(token, id);
 

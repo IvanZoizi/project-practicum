@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tbank.practicum.dto.KeyRequestDto;
 import ru.tbank.practicum.dto.KeyResponseDto;
-import ru.tbank.practicum.dto.enums.KeyStatus;
+import ru.tbank.practicum.dto.enums.Status;
 import ru.tbank.practicum.security.jwt.JwtFilter;
 import ru.tbank.practicum.security.jwt.JwtService;
 import ru.tbank.practicum.service.KeyService;
@@ -69,8 +69,8 @@ public class KeysController {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<KeyStatus> getMyStatusKey(@RequestHeader("Authorization") String authHeader,
-                                              @PathVariable("id") Long id) {
+    public ResponseEntity<Status> getMyStatusKey(@RequestHeader("Authorization") String authHeader,
+                                                 @PathVariable("id") Long id) {
         try {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);

@@ -3,6 +3,7 @@ package ru.tbank.practicum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.tbank.practicum.dto.enums.Status;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,7 +26,7 @@ public class Blinds {
     private String room;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    private Status status;
 
     @Column(name = "time_open", nullable = false)
     private LocalTime timeOpen;

@@ -3,8 +3,10 @@ package ru.tbank.practicum.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import ru.tbank.practicum.dto.BlindResponseDto;
 import ru.tbank.practicum.dto.CoordsResponseDto;
 import ru.tbank.practicum.dto.KeyResponseDto;
+import ru.tbank.practicum.entity.Blinds;
 import ru.tbank.practicum.entity.Keys;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.entity.UsersCoords;
@@ -40,5 +42,15 @@ public class SettingMapper {
         coordsResponseDto.setLat(usersCoords.getLat());
         coordsResponseDto.setLon(usersCoords.getLon());
         return coordsResponseDto;
+    }
+
+    public BlindResponseDto getDto(Blinds blinds) {
+        BlindResponseDto blindResponseDto = new BlindResponseDto();
+        blindResponseDto.setId(blinds.getId());
+        blindResponseDto.setRoom(blinds.getRoom());
+        blindResponseDto.setStatus(blinds.getStatus());
+        blindResponseDto.setTimeOpen(blinds.getTimeOpen());
+        blindResponseDto.setTimeClose(blinds.getTimeClose());
+        return blindResponseDto;
     }
 }

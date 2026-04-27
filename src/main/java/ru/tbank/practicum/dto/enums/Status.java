@@ -1,5 +1,5 @@
 package ru.tbank.practicum.dto.enums;
 
-public enum KeyStatus {
+public enum Status {
     OPENED, CLOSED;
 }
