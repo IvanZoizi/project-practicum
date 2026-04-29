@@ -16,8 +16,8 @@ public class BatteriesSetting {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "battery_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "battery_id")
     private Batteries batteries;
 
     @Column(name = "temp_off", nullable = false)

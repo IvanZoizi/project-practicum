@@ -23,6 +23,8 @@ public class Batteries {
     private String room;
 
     @Column(name = "temp_now", nullable = false)
-    private Long timeNow;
+    private Long tempNow;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "batteries")
+    private BatteriesSetting batteriesSetting;
 }

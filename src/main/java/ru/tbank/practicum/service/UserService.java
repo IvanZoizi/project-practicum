@@ -1,8 +1,6 @@
 package ru.tbank.practicum.service;
 
-import ru.tbank.practicum.dto.CoordsRequestDto;
-import ru.tbank.practicum.dto.CoordsResponseDto;
-import ru.tbank.practicum.dto.RegisterDto;
+import ru.tbank.practicum.dto.*;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.security.dto.JwtAutorizeToken;
 
@@ -15,4 +13,5 @@ public interface UserService {
 
     public CoordsResponseDto newUserCoords(String jwtToken, CoordsRequestDto coordsRequestDto);
     public CoordsResponseDto getUserCoords(String jwtToken);
+
 }

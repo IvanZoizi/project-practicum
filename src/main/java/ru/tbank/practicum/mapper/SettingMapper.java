@@ -3,13 +3,8 @@ package ru.tbank.practicum.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import ru.tbank.practicum.dto.BlindResponseDto;
-import ru.tbank.practicum.dto.CoordsResponseDto;
-import ru.tbank.practicum.dto.KeyResponseDto;
-import ru.tbank.practicum.entity.Blinds;
-import ru.tbank.practicum.entity.Keys;
-import ru.tbank.practicum.entity.Users;
-import ru.tbank.practicum.entity.UsersCoords;
+import ru.tbank.practicum.dto.*;
+import ru.tbank.practicum.entity.*;
 import ru.tbank.practicum.repository.KeyRepository;
 import ru.tbank.practicum.security.CustomUserDetail;
 
@@ -52,5 +47,20 @@ public class SettingMapper {
         blindResponseDto.setTimeOpen(blinds.getTimeOpen());
         blindResponseDto.setTimeClose(blinds.getTimeClose());
         return blindResponseDto;
+    }
+
+    public BatteryResponse getDto(Batteries batteries, BatteriesSetting batteriesSetting) {
+        TempSettingRequest tempSettingRequest = new TempSettingRequest();
+        tempSettingRequest.setTempOff(batteriesSetting.getTempOff());
+        tempSettingRequest.setTempOn(batteriesSetting.getTempOn());
+        tempSettingRequest.setTempSet(batteriesSetting.getTempSet());
+
+        BatteryResponse batteryResponse = new BatteryResponse();
+        batteryResponse.setTempSettingRequest(tempSettingRequest);
+        batteryResponse.setRoom(batteries.getRoom());
+        batteryResponse.setTempNow(batteries.getTempNow());
+        batteryResponse.setId(batteries.getId());
+
+        return batteryResponse;
     }
 }

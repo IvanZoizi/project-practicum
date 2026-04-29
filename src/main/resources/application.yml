@@ -11,6 +11,15 @@ spring:
     show-sql: true
   application:
     name: demo
+  kafka:
+    bootstrap-servers: kafka:29092
+    properties:
+      security.protocol: SASL_PLAINTEXT
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="devuser" password="devpass";
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
 
 app:
   cred:

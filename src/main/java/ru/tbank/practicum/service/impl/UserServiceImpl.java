@@ -2,11 +2,10 @@ package ru.tbank.practicum.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.tbank.practicum.dto.CoordsRequestDto;
-import ru.tbank.practicum.dto.CoordsResponseDto;
-import ru.tbank.practicum.dto.RegisterDto;
+import ru.tbank.practicum.dto.*;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.entity.UsersCoords;
 import ru.tbank.practicum.mapper.SettingMapper;
@@ -29,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final SettingMapper settingMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public String register(RegisterDto registerDto) {
@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     public JwtAutorizeToken singIn(RegisterDto registerDto) throws AuthenticationException {
         Users user = findByRegisterDto(registerDto);
         log.info("User: " + user);
+        kafkaTemplate.send("test-topic", "Аунтефикация пользователя");
         return jwtService.generateAuthToken(user.getLogin());
 
     }
@@ -101,6 +102,4 @@ public class UserServiceImpl implements UserService {
 
         return settingMapper.getDto(usersCoords.get());
     }
-
-
 }
