@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
     private final SettingMapper settingMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public String register(RegisterDto registerDto) {
@@ -43,7 +42,6 @@ public class UserServiceImpl implements UserService {
     public JwtAutorizeToken singIn(RegisterDto registerDto) throws AuthenticationException {
         Users user = findByRegisterDto(registerDto);
         log.info("User: " + user);
-        kafkaTemplate.send("test-topic", "Аунтефикация пользователя");
         return jwtService.generateAuthToken(user.getLogin());
 
     }

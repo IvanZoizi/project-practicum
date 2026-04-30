@@ -9,7 +9,12 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopic {
 
     @Bean
-    public NewTopic newTopic() {
-        return TopicBuilder.name("test-topic").build();
+    public NewTopic newTopicWeather() {
+        return TopicBuilder.name("topic-weather").build();
+    }
+
+    @Bean
+    public NewTopic newTopicTime() {
+        return TopicBuilder.name("topic-time").build();
     }
 }

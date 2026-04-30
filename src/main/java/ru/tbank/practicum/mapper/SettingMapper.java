@@ -8,6 +8,7 @@ import ru.tbank.practicum.entity.*;
 import ru.tbank.practicum.repository.KeyRepository;
 import ru.tbank.practicum.security.CustomUserDetail;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -62,5 +63,21 @@ public class SettingMapper {
         batteryResponse.setId(batteries.getId());
 
         return batteryResponse;
+    }
+
+    public WeatherDto getDto(WeatherResponse weatherResponse, Long userId) {
+        Double temperature = Optional.ofNullable(weatherResponse)
+                .map(WeatherResponse::getMain)
+                .map(CommonData::getTemp)
+                .orElse(null);
+
+        String weatherMain = Optional.ofNullable(weatherResponse)
+                .map(WeatherResponse::getWeather)
+                .filter(weatherList -> !weatherList.isEmpty())
+                .map(List::getFirst)
+                .map(Weather::getMain)
+                .orElse(null);
+
+        return new WeatherDto(null, userId, temperature, weatherMain);
     }
 }

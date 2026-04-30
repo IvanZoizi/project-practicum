@@ -19,7 +19,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtService {
 
-    @Value("8074658237c236e39e96e909ac1abb25a3e1773b100096ad6877c439cd452c17")
+    @Value("${spring.security.key}")
     private String jwtSecret;
 
     public JwtAutorizeToken generateAuthToken(String login) {
