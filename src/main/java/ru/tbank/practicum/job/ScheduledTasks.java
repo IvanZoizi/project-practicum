@@ -15,6 +15,7 @@ import ru.tbank.practicum.service.impl.WeatherService;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +23,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class ScheduledTasks {
-//
-//    private final double lon = 51.507545;
-//    private final double lat = -0.127794;
 //
     private final WeatherService weatherService;
     private final UsersCoordsRepository usersCoordsRepository;
@@ -35,7 +33,9 @@ public class ScheduledTasks {
     @Scheduled(fixedDelay = 60000)
     public void reportCurrentTime() {
 
-//        kafkaTemplateTime.send("topic-time", LocalTime.now());
+        ZoneOffset offsetPlus4 = ZoneOffset.ofHours(4);
+
+        kafkaTemplateTime.send("topic-time", LocalTime.now(offsetPlus4));
 
         List<UsersCoords> usersCoordsList = usersCoordsRepository.findAll();
 

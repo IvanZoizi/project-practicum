@@ -3,6 +3,7 @@ package ru.tbank.practicum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.tbank.practicum.dto.enums.Status;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +17,7 @@ public class LoggingBlind {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "blind_id", referencedColumnName = "id")
     private Blinds blinds;
 
@@ -24,5 +25,5 @@ public class LoggingBlind {
     private LocalDateTime time;
 
     @Column(name = "new_status", nullable = false)
-    private String newStatus;
+    private Status newStatus;
 }

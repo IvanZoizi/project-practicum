@@ -16,7 +16,7 @@ public class LoggingBattery {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "battery_id", referencedColumnName = "id")
     private Batteries batteries;
 

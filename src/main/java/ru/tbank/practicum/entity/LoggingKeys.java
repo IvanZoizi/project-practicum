@@ -3,6 +3,7 @@ package ru.tbank.practicum.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.tbank.practicum.dto.enums.Status;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,5 +26,5 @@ public class LoggingKeys {
     private LocalDateTime time;
 
     @Column(name = "new_status", nullable = false)
-    private String newStatus;
+    private Status newStatus;
 }

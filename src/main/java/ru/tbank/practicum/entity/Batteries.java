@@ -25,6 +25,6 @@ public class Batteries {
     @Column(name = "temp_now", nullable = false)
     private Long tempNow;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "batteries")
+    @OneToOne(mappedBy = "batteries")
     private BatteriesSetting batteriesSetting;
 }

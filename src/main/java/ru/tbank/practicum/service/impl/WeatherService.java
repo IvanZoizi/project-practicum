@@ -10,14 +10,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ru.tbank.practicum.dto.BatteryEvent;
 import ru.tbank.practicum.dto.WeatherDto;
 import ru.tbank.practicum.dto.WeatherResponse;
-import ru.tbank.practicum.entity.Batteries;
-import ru.tbank.practicum.entity.LoggingBattery;
-import ru.tbank.practicum.entity.UsersCoords;
+import ru.tbank.practicum.dto.enums.Status;
+import ru.tbank.practicum.entity.*;
 import ru.tbank.practicum.mapper.SettingMapper;
 import ru.tbank.practicum.repository.BatteryLoggingRepository;
 import ru.tbank.practicum.repository.BatteryRepository;
+import ru.tbank.practicum.repository.BlindLoggingRepository;
+import ru.tbank.practicum.repository.BlindRepository;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -28,24 +31,58 @@ public class WeatherService {
     private final SettingMapper settingMapper;
     private final BatteryLoggingRepository batteryLoggingRepository;
     private final BatteryRepository batteryRepository;
+    private final BlindRepository blindRepository;
+    private final BlindLoggingRepository blindLoggingRepository;
 
     @Value("${app.cred.token}")
     private String token;
 
+    @KafkaListener(topics = "topic-time", groupId = "group1")
+    void listenerTime(LocalTime localTime) {
+
+        log.info("Start Blind status by LocalTime: " + localTime + " between " + localTime.plusMinutes(1));
+
+        List<Blinds> blindsList = blindRepository.findAllByTimeCloseBetweenAndStatus(localTime,
+                localTime.plusMinutes(1),
+                Status.OPENED);
+        for (Blinds blind : blindsList) {
+            blindRepository.updateStatusBlind(blind.getId(),
+                    Status.CLOSED);
+            LoggingBlind loggingBlind = new LoggingBlind();
+            loggingBlind.setBlinds(blind);
+            loggingBlind.setNewStatus(Status.CLOSED);
+            loggingBlind.setTime(LocalDateTime.now());
+            blindLoggingRepository.save(loggingBlind);
+        }
+
+        blindsList = blindRepository.findAllByTimeOpenBetweenAndStatus(localTime,
+                localTime.plusMinutes(1),
+                Status.CLOSED);
+        for (Blinds blind : blindsList) {
+            blindRepository.updateStatusBlind(blind.getId(),
+                    Status.OPENED);
+            LoggingBlind loggingBlind = new LoggingBlind();
+            loggingBlind.setBlinds(blind);
+            loggingBlind.setNewStatus(Status.OPENED);
+            loggingBlind.setTime(LocalDateTime.now());
+            blindLoggingRepository.save(loggingBlind);
+        }
+    }
+
     @KafkaListener(topics = "topic-weather", groupId = "group1")
-    void listener(BatteryEvent batteryEvent) {
+    void listenerWeater(BatteryEvent batteryEvent) {
 
         log.info("New BatteryEvent " + batteryEvent);
 
         Batteries batteries = batteryRepository.findById(batteryEvent.getId())
                 .orElseThrow(() -> new IllegalArgumentException());
 
+        log.info("Start logging battery");
+
         LoggingBattery loggingBattery = new LoggingBattery();
         loggingBattery.setBatteries(batteries);
         loggingBattery.setTemp(batteries.getTempNow());
         loggingBattery.setTime(LocalDateTime.now());
-
-        log.info(loggingBattery.toString());
 
         batteryLoggingRepository.save(loggingBattery);
         batteryRepository.updateTempBattery(batteries.getId(), batteryEvent.getTempSet());

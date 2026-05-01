@@ -24,13 +24,13 @@ public interface BatteryRepository extends JpaRepository<Batteries, Long> {
 
     @Query(value = "SELECT b.* FROM batteries b " +
             "JOIN battery_setting bs ON bs.battery_id = b.id " +
-            "WHERE b.users_id = ?1 AND bs.temp_off >= ?2",
+            "WHERE b.users_id = ?1 AND bs.temp_off >= ?2 AND b.temp_now > 0",
             nativeQuery = true)
     Optional<Batteries> findByTempOff(Long id, Long temp);
 
     @Query(value = "SELECT b.* FROM batteries b " +
             "JOIN battery_setting bs ON bs.battery_id = b.id " +
-            "WHERE b.users_id = ?1 AND bs.temp_on <= ?2",
+            "WHERE b.users_id = ?1 AND bs.temp_on <= ?2 AND b.temp_now = 0",
             nativeQuery = true)
     Optional<Batteries> findByTempOn(Long id, Long temp);
 }
