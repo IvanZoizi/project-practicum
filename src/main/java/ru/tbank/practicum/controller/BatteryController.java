@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tbank.practicum.dto.BatteryRequest;
-import ru.tbank.practicum.dto.BatteryResponse;
-import ru.tbank.practicum.dto.TempSettingRequest;
+import ru.tbank.practicum.dto.*;
 import ru.tbank.practicum.security.jwt.JwtService;
 import ru.tbank.practicum.service.BatteryService;
 
@@ -77,6 +75,17 @@ public class BatteryController {
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(batteryService.updateTempSetting(jwtToken, id, tempSettingRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("/history/{id}")
+    public ResponseEntity<List<LoggingBatteryDto>> getHistory(@RequestHeader("Authorization") String authHeader,
+                                                              @PathVariable("id") Long id ) {
+        try {
+            String jwtToken = jwtService.getJwtToken(authHeader);
+            return ResponseEntity.ok(batteryService.getHistoryKey(jwtToken, id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

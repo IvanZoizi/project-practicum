@@ -2,6 +2,7 @@ package ru.tbank.practicum.service;
 
 import ru.tbank.practicum.dto.BlindCreateDto;
 import ru.tbank.practicum.dto.BlindResponseDto;
+import ru.tbank.practicum.dto.LoggingBlindDto;
 import ru.tbank.practicum.dto.enums.BlindUpdateTimeDto;
 import ru.tbank.practicum.dto.enums.Status;
 
@@ -14,4 +15,5 @@ public interface BlindService {
     public BlindResponseDto updateTimeOpenBlind(String jwtToken, BlindUpdateTimeDto blindUpdateTimeDto);
     public BlindResponseDto updateTimeCloseBlind(String jwtToken, BlindUpdateTimeDto blindUpdateTimeDto);
     public Status getStatusBlind(String jwtToken, Long id);
+    public List<LoggingBlindDto> getHistoryBlind(String jwtToken, Long id);
 }

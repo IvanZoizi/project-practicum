@@ -6,17 +6,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tbank.practicum.dto.KeyRequestDto;
 import ru.tbank.practicum.dto.KeyResponseDto;
+import ru.tbank.practicum.dto.LoggingKeyDto;
 import ru.tbank.practicum.dto.enums.Status;
 import ru.tbank.practicum.entity.Keys;
+import ru.tbank.practicum.entity.LoggingKeys;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.mapper.SettingMapper;
 import ru.tbank.practicum.repository.KeyRepository;
+import ru.tbank.practicum.repository.KeysLoggingRepository;
 import ru.tbank.practicum.repository.UsersRepository;
 import ru.tbank.practicum.security.jwt.JwtService;
 import ru.tbank.practicum.service.KeyService;
 import ru.tbank.practicum.service.UserService;
 
 import javax.xml.crypto.KeySelectorResult;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,9 +30,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KeyServiceImpl implements KeyService {
 
-    private JwtService jwtService;
     private SettingMapper settingMapper;
-    private UsersRepository usersRepository;
+    private KeysLoggingRepository keysLoggingRepository;
     private KeyRepository keyRepository;
     private UserService userService;
 
@@ -75,4 +78,38 @@ public class KeyServiceImpl implements KeyService {
 
         return keyResponseDto.getStatus();
     }
+
+    @Override
+    public Status lockOrUnlockKey(String token, Long id) {
+        Users user = userService.getUserByToken(token);
+        Keys keys = keyRepository.findByUser_IdAndId(user.getId(), id)
+                .orElseThrow(() -> new IllegalArgumentException());
+        Status status;
+        if (keys.getStatus().equals(Status.CLOSED)) {
+            status = Status.OPENED;
+        } else {
+            status = Status.CLOSED;
+        }
+
+        LoggingKeys loggingKeys = new LoggingKeys();
+        loggingKeys.setKeys(keys);
+        loggingKeys.setTime(LocalDateTime.now());
+        loggingKeys.setNewStatus(status);
+        keysLoggingRepository.save(loggingKeys);
+
+        keyRepository.updateStatusKey(id, status);
+
+        return status;
+    }
+
+    @Override
+    @Transactional
+    public List<LoggingKeyDto> getHistoryKey(String jwtToken, Long id) {
+        Users user = userService.getUserByToken(jwtToken);
+        return keysLoggingRepository.findAllByKeys_IdAndKeys_User_Id(id, user.getId())
+                .map(settingMapper::getDto)
+                .toList();
+    }
+
+
 }

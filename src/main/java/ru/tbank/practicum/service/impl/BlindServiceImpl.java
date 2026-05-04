@@ -6,18 +6,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tbank.practicum.dto.BlindCreateDto;
 import ru.tbank.practicum.dto.BlindResponseDto;
+import ru.tbank.practicum.dto.LoggingBlindDto;
 import ru.tbank.practicum.dto.enums.BlindUpdateTimeDto;
 import ru.tbank.practicum.dto.enums.Status;
 import ru.tbank.practicum.entity.Blinds;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.mapper.SettingMapper;
+import ru.tbank.practicum.repository.BlindLoggingRepository;
 import ru.tbank.practicum.repository.BlindRepository;
 import ru.tbank.practicum.service.BlindService;
 import ru.tbank.practicum.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @Service
 @Slf4j
@@ -27,6 +28,7 @@ public class BlindServiceImpl implements BlindService {
     private SettingMapper settingMapper;
     private UserService userService;
     private BlindRepository blindRepository;
+    private BlindLoggingRepository blindLoggingRepository;
 
     @Override
     public BlindResponseDto newBlind(String jwtToken, BlindCreateDto blindCreateDto) {
@@ -94,5 +96,14 @@ public class BlindServiceImpl implements BlindService {
     @Override
     public Status getStatusBlind(String jwtToken, Long id) {
         return getBlind(jwtToken, id).getStatus();
+    }
+
+    @Override
+    @Transactional
+    public List<LoggingBlindDto> getHistoryBlind(String jwtToken, Long id) {
+        Users user = userService.getUserByToken(jwtToken);
+        return blindLoggingRepository.findAllByBlinds_IdAndBlinds_User_Id(id, user.getId())
+                .map(settingMapper::getDto)
+                .toList();
     }
 }

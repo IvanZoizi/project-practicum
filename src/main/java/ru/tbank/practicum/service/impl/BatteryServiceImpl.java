@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tbank.practicum.dto.BatteryRequest;
 import ru.tbank.practicum.dto.BatteryResponse;
+import ru.tbank.practicum.dto.LoggingBatteryDto;
 import ru.tbank.practicum.dto.TempSettingRequest;
 import ru.tbank.practicum.entity.Batteries;
 import ru.tbank.practicum.entity.BatteriesSetting;
 import ru.tbank.practicum.entity.Users;
 import ru.tbank.practicum.mapper.SettingMapper;
+import ru.tbank.practicum.repository.BatteryLoggingRepository;
 import ru.tbank.practicum.repository.BatteryRepository;
 import ru.tbank.practicum.repository.BatterySettingRepository;
 import ru.tbank.practicum.service.BatteryService;
@@ -26,6 +28,7 @@ public class BatteryServiceImpl implements BatteryService {
     private BatteryRepository batteryRepository;
     private BatterySettingRepository batterySettingRepository;
     private SettingMapper settingMapper;
+    private BatteryLoggingRepository batteryLoggingRepository;
 
     @Override
     public BatteryResponse newBattery(String jwtToken, BatteryRequest batteryRequest) {
@@ -79,5 +82,14 @@ public class BatteryServiceImpl implements BatteryService {
         batteriesSetting.setTempOn(tempSettingRequest.getTempOn());
         batteriesSetting.setTempOff(tempSettingRequest.getTempOff());
         return settingMapper.getDto(batteries, batterySettingRepository.save(batteriesSetting));
+    }
+
+    @Override
+    @Transactional
+    public List<LoggingBatteryDto> getHistoryKey(String jwtToken, Long id) {
+         Users user = userService.getUserByToken(jwtToken);
+         return batteryLoggingRepository.findAllByBatteries_IdAndBatteries_User_Id(id, user.getId())
+                 .map(settingMapper::getDto)
+                 .toList();
     }
 }

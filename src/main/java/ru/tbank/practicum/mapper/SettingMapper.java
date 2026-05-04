@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.tbank.practicum.dto.*;
+import ru.tbank.practicum.dto.LoggingBlindDto;
 import ru.tbank.practicum.entity.*;
-import ru.tbank.practicum.repository.KeyRepository;
 import ru.tbank.practicum.security.CustomUserDetail;
 
 import java.util.List;
@@ -15,8 +15,6 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class SettingMapper {
-
-    private final KeyRepository keyRepository;
 
     public CustomUserDetail getDto(Optional<Users> user, String login) {
         return user.map(CustomUserDetail::new)
@@ -79,5 +77,26 @@ public class SettingMapper {
                 .orElse(null);
 
         return new WeatherDto(null, userId, temperature, weatherMain);
+    }
+
+    public LoggingBlindDto getDto(ru.tbank.practicum.entity.LoggingBlind loggingKeys) {
+        LoggingBlindDto loggingBlind = new LoggingBlindDto();
+        loggingBlind.setLocalDateTime(loggingKeys.getTime());
+        loggingBlind.setStatus(loggingKeys.getNewStatus());
+        return loggingBlind;
+    }
+
+    public LoggingKeyDto getDto(LoggingKeys loggingKeys) {
+        LoggingKeyDto loggingKeyDto = new LoggingKeyDto();
+        loggingKeyDto.setStatus(loggingKeys.getNewStatus());
+        loggingKeyDto.setLocalDateTime(loggingKeys.getTime());
+        return loggingKeyDto;
+    }
+
+    public LoggingBatteryDto getDto(LoggingBattery loggingBattery) {
+        LoggingBatteryDto loggingBatteryDto = new LoggingBatteryDto();
+        loggingBatteryDto.setNewTemp(loggingBattery.getTemp());
+        loggingBatteryDto.setLocalDateTime(loggingBattery.getTime());
+        return loggingBatteryDto;
     }
 }

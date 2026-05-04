@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tbank.practicum.dto.BlindCreateDto;
 import ru.tbank.practicum.dto.BlindResponseDto;
+import ru.tbank.practicum.dto.LoggingBlindDto;
 import ru.tbank.practicum.dto.enums.BlindUpdateTimeDto;
 import ru.tbank.practicum.dto.enums.Status;
 import ru.tbank.practicum.security.jwt.JwtService;
@@ -84,6 +85,17 @@ public class BlindController {
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.updateTimeCloseBlind(jwtToken, blindUpdateTimeDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("/history/{id}")
+    public ResponseEntity<List<LoggingBlindDto>> getHistory(@RequestHeader("Authorization") String authHeader,
+                                                            @PathVariable("id") Long id ) {
+        try {
+            String jwtToken = jwtService.getJwtToken(authHeader);
+            return ResponseEntity.ok(blindService.getHistoryBlind(jwtToken, id));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

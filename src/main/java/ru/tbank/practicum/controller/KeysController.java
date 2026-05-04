@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tbank.practicum.dto.KeyRequestDto;
 import ru.tbank.practicum.dto.KeyResponseDto;
+import ru.tbank.practicum.dto.LoggingKeyDto;
 import ru.tbank.practicum.dto.enums.Status;
 import ru.tbank.practicum.security.jwt.JwtFilter;
 import ru.tbank.practicum.security.jwt.JwtService;
@@ -75,6 +76,32 @@ public class KeysController {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(keyService.getStatusKey(jwtToken, id));
+        } catch (Exception e) {
+            log.error(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PostMapping("/status")
+    public ResponseEntity<Status> lockOrUnlockKey(@RequestHeader("Authorization") String authHeader,
+                                                  @PathVariable("id") Long id) {
+        try {
+            log.info("New request, token: " + authHeader);
+            String jwtToken = jwtService.getJwtToken(authHeader);
+            return ResponseEntity.ok(keyService.lockOrUnlockKey(jwtToken, id));
+        } catch (Exception e) {
+            log.error(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("/history/{id}")
+    public ResponseEntity<List<LoggingKeyDto>> getHistoryKey(@RequestHeader("Authorization") String authHeader,
+                                                             @PathVariable("id") Long id) {
+        try {
+            log.info("New request, token: " + authHeader);
+            String jwtToken = jwtService.getJwtToken(authHeader);
+            return ResponseEntity.ok(keyService.getHistoryKey(jwtToken, id));
         } catch (Exception e) {
             log.error(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

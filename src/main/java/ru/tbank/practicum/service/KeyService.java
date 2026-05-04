@@ -2,6 +2,7 @@ package ru.tbank.practicum.service;
 
 import ru.tbank.practicum.dto.KeyRequestDto;
 import ru.tbank.practicum.dto.KeyResponseDto;
+import ru.tbank.practicum.dto.LoggingKeyDto;
 import ru.tbank.practicum.dto.enums.Status;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface KeyService {
     public List<KeyResponseDto> getMyKeys(String token);
     public KeyResponseDto getKey(String token, Long id);
     public Status getStatusKey(String token, Long id);
+    public Status lockOrUnlockKey(String token, Long id);
+    public List<LoggingKeyDto> getHistoryKey(String jwtToken, Long id);
 }

@@ -1,4 +1,4 @@
-FROM amazoncorretto:21-alpine3.21 as builder
+FROM eclipse-temurin:21-jdk-alpine as builder
 
 WORKDIR /app
 
@@ -8,10 +8,9 @@ RUN chmod +x gradlew
 
 RUN sed -i 's/\r$//' gradlew
 
-
 RUN ./gradlew clean build -x test --no-daemon
 
-FROM amazoncorretto:21.0.7-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 

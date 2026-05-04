@@ -31,6 +31,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String register(RegisterDto registerDto) {
+
+        Optional<Users> optionalUsers = usersRepository.findByLogin(registerDto.getLogin());
+        if (optionalUsers.isPresent()) {
+            throw new IllegalArgumentException("Данный login уже занят");
+        }
+
+        if (registerDto.getPassword().length() < 8) {
+            throw new IllegalArgumentException("Данный пароль слишком маленький (от 10 символов)");
+        }
+
         Users user = new Users();
         user.setLogin(registerDto.getLogin());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
