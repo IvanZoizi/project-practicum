@@ -1,0 +1,12 @@
+dependencies:
+- name: postgresql
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 16.3.0
+- name: kafka
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 32.3.0
+- name: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 65.0.0
+digest: sha256:adcbe200e263b7e896fab8d58483f1afd6f70385a797b30da2287ec904508762
+generated: "2026-05-06T13:48:47.5909562+04:00"

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "demo.fullname" . }}
+  labels:
+    {{- include "demo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "demo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "demo.labels" . | nindent 8 }}
+          {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+          {{- end }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            # PostgreSQL
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://demo-app-postgresql:5432/{{ .Values.postgresql.auth.database }}"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.postgresql.auth.username }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.postgresql.auth.password }}
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+
+            # Kafka
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "demo-app-kafka:9092"
+            - name: spring_kafka_properties_security_protocol
+              value: SASL_PLAINTEXT
+            - name: spring_kafka_properties_sasl_mechanism
+              value: PLAIN
+            - name: spring_kafka_properties_sasl_jaas_config
+              value: 'org.apache.kafka.common.security.plain.PlainLoginModule required username="my_user" password="{{ .Values.kafka.controller.password }}";'

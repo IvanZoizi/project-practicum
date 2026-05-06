@@ -1,0 +1,93 @@
+replicaCount: 2
+
+image:
+  repository: demo/spring-boot-docker
+  pullPolicy: Never
+  tag: "latest"
+
+podLabels: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+global:
+  security:
+    allowInsecureImages: true
+
+postgresql:
+  image:
+    repository: postgres
+    tag: 17.4
+  auth:
+    username: "my_user"
+    password: "my_password"
+    database: "my_database"
+  primary:
+    initdb:
+      scripts:
+        my_init_script.sql: |
+          CREATE DATABASE my_database;
+    containerSecurityContext:
+      readOnlyRootFilesystem: false
+
+kafka:
+  image:
+    repository: bitnamilegacy/kafka
+    tag: 4.0.0-debian-12-r10
+  controller:
+    replicaCount: 1
+  broker:
+    replicaCount: 0
+  listeners:
+    client:
+      protocol: SASL_PLAINTEXT
+  sasl:
+    enabledMechanisms: PLAIN
+    client:
+      users:
+        - my_user
+      passwords:
+        - my_password
+    interBrokerProtocol: SASL_PLAINTEXT
+    interbroker:
+      user: my_user
+      password: my_password
+    controller:
+      user: my_user
+      password: my_password
+  kraft:
+    enabled: true
+  zookeeper:
+    enabled: false
+  persistence:
+    enabled: false
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+
+kube-prometheus-stack:
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+    adminPassword: "admin"
+    persistence:
+      enabled: true
+      size: 5Gi
+    service:
+      type: ClusterIP
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: 'default'
+            orgId: 1
+            folder: ''
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards

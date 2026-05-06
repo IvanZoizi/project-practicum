@@ -7,7 +7,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     show-sql: true
   application:
     name: demo
@@ -17,17 +17,63 @@ spring:
       security.protocol: SASL_PLAINTEXT
       sasl.mechanism: PLAIN
       sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="devuser" password="devpass";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
-      group-id: my-group
+      group-id: smarthome-group
       auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: battery.event:ru.tbank.practicum.dto.BatteryEvent
+  security:
+    key: demo_key
 
 app:
   cred:
-    token: "demo token"
+    token: "demo_key"
 
 server:
-  port:
-    8080
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+        step: 1m
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        kafka.consumer.fetch.manager.records.lag: true
+      sla:
+        http.server.requests: 1ms,5ms,10ms,50ms,100ms,200ms,500ms,1s,2s
+    tags:
+      application: ${spring.application.name}
+      environment: development
+    enable:
+      jvm: true
+      process: true
+      system: true
+      logback: true
+      tomcat: true
+      hikaricp: true
+      kafka: true
+      http.server.requests: true
 
 logging:
   level:

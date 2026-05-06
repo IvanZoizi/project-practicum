@@ -1,0 +1,16 @@
+Thank you for installing {{ include "demo.fullname" . }}.
+
+Your application is now running!
+
+{{- if .Values.service.type }}
+To access the application:
+
+{{- if eq .Values.service.type "NodePort" }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "demo.fullname" . }})
+  echo "http://127.0.0.1:$NODE_PORT"
+{{- else if eq .Values.service.type "LoadBalancer" }}
+  It may take a few minutes for the LoadBalancer IP to be assigned.
+{{- end }}
+{{- end }}
+
+Postgres and Kafka subcharts are also installed
