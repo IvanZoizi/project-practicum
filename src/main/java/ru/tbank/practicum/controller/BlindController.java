@@ -1,5 +1,6 @@
 package ru.tbank.practicum.controller;
 
+import io.micrometer.core.instrument.Counter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +25,12 @@ import java.util.List;
 public class BlindController {
     private BlindService blindService;
     private JwtService jwtService;
+    private Counter counterRequests;
 
     @PostMapping
     public ResponseEntity<BlindResponseDto> createBlindUser(@RequestHeader("Authorization") String authHeader,
                                                             @RequestBody BlindCreateDto blindCreateDto) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.newBlind(jwtToken, blindCreateDto));
@@ -39,6 +42,7 @@ public class BlindController {
     @GetMapping("/{id}")
     public ResponseEntity<BlindResponseDto> getBlindUser(@RequestHeader("Authorization") String authHeader,
                                                          @PathVariable("id") Long id)  {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.getBlind(jwtToken, id));
@@ -50,6 +54,7 @@ public class BlindController {
     @GetMapping("/status/{id}")
     public ResponseEntity<Status> getStatusBlindUser(@RequestHeader("Authorization") String authHeader,
                                                      @PathVariable("id") Long id)  {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.getStatusBlind(jwtToken, id));
@@ -60,6 +65,7 @@ public class BlindController {
 
     @GetMapping
     public ResponseEntity<List<BlindResponseDto>> getAllBlindUser(@RequestHeader("Authorization") String authHeader)  {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.getBlinds(jwtToken));
@@ -71,6 +77,7 @@ public class BlindController {
     @PutMapping("/time/open")
     public ResponseEntity<BlindResponseDto> updateTimeOpen(@RequestHeader("Authorization") String authHeader,
                                                             @RequestBody BlindUpdateTimeDto blindUpdateTimeDto) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.updateTimeOpenBlind(jwtToken, blindUpdateTimeDto));
@@ -82,6 +89,7 @@ public class BlindController {
     @PutMapping("/time/close")
     public ResponseEntity<BlindResponseDto> updateTimeClose(@RequestHeader("Authorization") String authHeader,
                                                             @RequestBody BlindUpdateTimeDto blindUpdateTimeDto) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.updateTimeCloseBlind(jwtToken, blindUpdateTimeDto));
@@ -93,6 +101,7 @@ public class BlindController {
     @GetMapping("/history/{id}")
     public ResponseEntity<List<LoggingBlindDto>> getHistory(@RequestHeader("Authorization") String authHeader,
                                                             @PathVariable("id") Long id ) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(blindService.getHistoryBlind(jwtToken, id));

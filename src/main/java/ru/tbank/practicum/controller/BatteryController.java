@@ -1,5 +1,6 @@
 package ru.tbank.practicum.controller;
 
+import io.micrometer.core.instrument.Counter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,13 @@ public class BatteryController {
 
     private BatteryService batteryService;
 
-    private final JwtService jwtService;
+    private JwtService jwtService;
+    private Counter counterRequests;
 
     @PostMapping
     public ResponseEntity<BatteryResponse> createNewBattery(@RequestHeader("Authorization") String authHeader,
                                                             @RequestBody BatteryRequest batteryRequest) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             BatteryResponse batteryResponse = batteryService.newBattery(jwtToken, batteryRequest);
@@ -38,6 +41,7 @@ public class BatteryController {
 
     @GetMapping("/all")
     public ResponseEntity<List<BatteryResponse>> getAllBattery(@RequestHeader("Authorization") String authHeader) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(batteryService.getAllBatteries(jwtToken));
@@ -49,6 +53,7 @@ public class BatteryController {
     @GetMapping("/{id}")
     public ResponseEntity<BatteryResponse> getBattery(@RequestHeader("Authorization") String authHeader,
                                                       @PathVariable("id") Long id) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(batteryService.getBatteryById(jwtToken, id));
@@ -60,6 +65,7 @@ public class BatteryController {
     @GetMapping("/temp/{id}")
     public ResponseEntity<Long> getTempBattery(@RequestHeader("Authorization") String authHeader,
                                                       @PathVariable("id") Long id) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(batteryService.getTempNow(jwtToken, id));
@@ -72,6 +78,7 @@ public class BatteryController {
     public ResponseEntity<BatteryResponse> updateTempBattery(@RequestHeader("Authorization") String authHeader,
                                                              @PathVariable("id") Long id,
                                                              @RequestBody TempSettingRequest tempSettingRequest) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(batteryService.updateTempSetting(jwtToken, id, tempSettingRequest));
@@ -83,6 +90,7 @@ public class BatteryController {
     @GetMapping("/history/{id}")
     public ResponseEntity<List<LoggingBatteryDto>> getHistory(@RequestHeader("Authorization") String authHeader,
                                                               @PathVariable("id") Long id ) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(batteryService.getHistoryKey(jwtToken, id));

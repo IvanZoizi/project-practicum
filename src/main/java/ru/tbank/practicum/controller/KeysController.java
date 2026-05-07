@@ -1,5 +1,6 @@
 package ru.tbank.practicum.controller;
 
+import io.micrometer.core.instrument.Counter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,12 @@ public class KeysController {
     private KeyService keyService;
     private JwtService jwtService;
 
+    private final Counter counterRequests;
+
     @PostMapping
     public ResponseEntity<KeyResponseDto> createKey(@RequestHeader("Authorization") String authHeader,
                                                     @RequestBody KeyRequestDto keyRequestDto) {
+        counterRequests.increment();
         try {
 
             log.info("New request, token: " + authHeader);
@@ -46,6 +50,7 @@ public class KeysController {
 
     @GetMapping
     public ResponseEntity<List<KeyResponseDto>> getAllKey(@RequestHeader("Authorization") String authHeader) {
+        counterRequests.increment();
         try {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);
@@ -59,6 +64,7 @@ public class KeysController {
     @GetMapping("/{id}")
     public ResponseEntity<KeyResponseDto> getMyKey(@RequestHeader("Authorization") String authHeader,
                                                    @PathVariable("id") Long id) {
+        counterRequests.increment();
         try {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);
@@ -72,6 +78,7 @@ public class KeysController {
     @GetMapping("/status/{id}")
     public ResponseEntity<Status> getMyStatusKey(@RequestHeader("Authorization") String authHeader,
                                                  @PathVariable("id") Long id) {
+        counterRequests.increment();
         try {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);
@@ -85,6 +92,7 @@ public class KeysController {
     @PostMapping("/status")
     public ResponseEntity<Status> lockOrUnlockKey(@RequestHeader("Authorization") String authHeader,
                                                   @PathVariable("id") Long id) {
+        counterRequests.increment();
         try {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);
@@ -98,6 +106,7 @@ public class KeysController {
     @GetMapping("/history/{id}")
     public ResponseEntity<List<LoggingKeyDto>> getHistoryKey(@RequestHeader("Authorization") String authHeader,
                                                              @PathVariable("id") Long id) {
+        counterRequests.increment();
         try {
             log.info("New request, token: " + authHeader);
             String jwtToken = jwtService.getJwtToken(authHeader);

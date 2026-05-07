@@ -1,5 +1,6 @@
 package ru.tbank.practicum.controller;
 
+import io.micrometer.core.instrument.Counter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,17 @@ public class UserController {
     private UserService userService;
     private JwtService jwtService;
 
+    private final Counter counterRequests;
+
     @PostMapping("/register")
     public String register(@RequestBody RegisterDto registerDto) {
+        counterRequests.increment();
         return userService.register(registerDto);
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtAutorizeToken> singIn(@RequestBody RegisterDto userCredentialsDto) {
+        counterRequests.increment();
         try {
             JwtAutorizeToken jwtAuthenticationDto = userService.singIn(userCredentialsDto);
             return ResponseEntity.ok(jwtAuthenticationDto);
@@ -43,6 +48,7 @@ public class UserController {
     @PostMapping("/coords")
     public ResponseEntity<CoordsResponseDto> setUserCoord(@RequestHeader("Authorization") String authHeader,
                                                           @RequestBody CoordsRequestDto coordsRequestDto) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(userService.newUserCoords(jwtToken, coordsRequestDto));
@@ -54,6 +60,7 @@ public class UserController {
 
     @GetMapping("/coords")
     public ResponseEntity<CoordsResponseDto> getUserCoord(@RequestHeader("Authorization") String authHeader) {
+        counterRequests.increment();
         try {
             String jwtToken = jwtService.getJwtToken(authHeader);
             return ResponseEntity.ok(userService.getUserCoords(jwtToken));
